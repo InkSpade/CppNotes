@@ -13,18 +13,7 @@
 设置好可以尝试连接github主站，会让输入passphrase密码
     `ssh -T git@github.com`
 
-## 上传步骤
-
-```
-git init    （第一次）
-git add .    （.是所有文件加入进去）
-git commit -m "first commit"    （注释）
-git branch -M "main"
-git remote add origin git@github.com:InkSpade/*.git    （使用ssh的网址只要输入passphrase就行）
-git push -u origin master     (第一次加-u，后面不用了)
-```
-
-### 官方上传教程
+### 上传教程
 
 第一次上传
 
@@ -34,16 +23,16 @@ git init
 git add README.md
 git commit -m "first commit"
 git branch -M "main"
-git remote add origin git@github.com:InkSpade/-.git
+git remote add origin git@github.com:InkSpade/-.git		（使用ssh的网址只要输入passphrase就行）
 git push -u origin "main"
 ```
 
 后面更新它
 
 ```
-git remote add origin git@github.com:InkSpade/-.git
-git branch -M  "main"
-git push -u origin "main"
+git add .   （.是所有文件加入进去）
+git commit -m "x-th commit"    （提交注释）
+git push origin master		
 ```
 
 # VisualStudio
