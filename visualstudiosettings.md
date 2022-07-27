@@ -23,7 +23,7 @@ git init
 git add README.md
 git commit -m "first commit"
 git branch -M "main"
-git remote add origin git@github.com:InkSpade/-.git		（使用ssh的网址只要输入passphrase就行）
+git remote add origin git@github.com:InkSpade/-.git        （使用ssh的网址只要输入passphrase就行）
 git push -u origin "main"
 ```
 
@@ -32,7 +32,7 @@ git push -u origin "main"
 ```
 git add .   （.是所有文件加入进去）
 git commit -m "x-th commit"    （提交注释）
-git push origin master		
+git push origin master        
 ```
 
 # VisualStudio
@@ -56,3 +56,7 @@ Your settings were successfully imported from ChernoVS.vssettings.
 然后将Configuration和Platform设置成All Configurations和All Platforms
 然后将Output Directory和Intermediate Directory设置成图片中
 ![图2](./pic/VS-2.png)
+
+## some 快捷键
+
+sooner

@@ -416,3 +416,221 @@ int main()
 classes allow us to group variables together into a type and also add functionality to those variables
 we got data and functions to manipulate that data
 calsses are essentially just syntactic sugar that we can use to organize our code and make it easier to maintain, that's all they are
+
+# 五、CLASSES vs STRUCTS in C++
+
+## 1. two terms in C++, what the differences are, when should be using
+
+a struct which is short for structure
+a class
+there is basically none differences
+there is one small difference to do with visibility
+
+in a calss
+if not add `public:`
+only other methods inside the class can actually access the `Move` method
+
+```
+class Player         
+{
+    int x, y;
+    int speed;
+    void Move(int xa, int ya)
+    {
+        x += xa * player.speed;
+        y += ya * player.speed;
+    }
+};
+```
+
+a class is private by default, so if you don't specify any kind of visibility modifier like `public:`, the default is private
+to the struct, the default is public, if i actually did want something to be private, i would explicitly have to write`private:`
+
+```
+struct Player         
+{
+private:
+    int x, y;
+    int speed;
+    void Move(int xa, int ya)
+    {
+        x += xa * player.speed;
+        y += ya * player.speed;
+    }
+};
+```
+
+that's really all there is to it
+
+## 2. the usage in code is actually going to differ
+
+the only reason struct really even exists in C++ is because of the backwards compatibility兼容性 that it wants to maintain with C.
+because C code doesn't have classes, it does have structures though, and if we were suddenly to wipe out this whole `struct` Keyword entirely, then we would lose all compatibility
+
+but if we delete `struct` in C++, we can fix it pretty easily by just using a hash define `#define`. so we could write something like `#define struct class`, then we replace all of our structs with classes. that means the `struct` in the code will be replaced with the word `class`. be noted that then you should add `public:` in the definition of `struct` in C code before copying the code to C++.
+
+## 3. My style of programming 1
+
+i like to use `struct` whenever possible, when i'm basically talking about plain old data or pod basically where i'm talking about some kind of structure which just represents variables, a bunch of variables, that's really all it's there for.
+A great example of this might be something like a mathematical Vector class
+example, i want to make some kind of structure which just held two floats together
+
+```
+struct Vec2
+{
+    float x, y;        //just have my x and y float
+};
+```
+
+because fundamentally this Vec2 class or struct is just a representation of 2 floats, 这个Vec2结构只是两个浮点数的表现形式
+that's what it is at its core
+it's not supposed to contain a massive amount of functionality like a `Player` class(Player class has a 3D model, it might handle all the rendering code for that 3D model, it might handling how the player moves around the map, taking in keyboard input and all of that)
+it's just 2 variables and we've grouped them literally just for the reason of making our code easier to use
+
+but i will add method to this, just for manipulating these variables, i'm still just talking about those two variables到头来
+
+```
+struct Vec2
+{
+    float x, y;
+    void Add(const Vec2& other)
+    {
+        x += other.x;
+        y += other.y;
+    }
+};
+```
+
+there is a bit of difference in terms of design, it's something massively more complicated
+
+## 4. My style of programming 2, the other scenario, inheritance
+
+i will never use inheritance with structs
+if i'm going to have an entire class hierarchy or some kind of inheritance Hierarchy, i'm going to use a class
+inheritance is something that's adding another level of complexity, and i just want my structures to be structures of data
+that's it
+
+if you have a class called A, and then a struct called B which inherits from A, some compliers will give you warning telling you that you're inheriting from a class but you're a struct, your code will still work, it's just warning and a bit of a semantically语义上的 difference
+
+## 5. Conclusion, reasons for using a struct versus a class, differentiate between those two types
+
+if i just want to represent some data in a structure, i will use a `struct`.
+but if i've got an entire class filled with functionality like a game world or a player or something that additionally might have inheritance and all these systems, i'm going to use a `class`.
+
+# 六、How to Write a C++ Class
+
+from this episode, you will get to see the process and the difference of going from a basic version of a Class to a more advanced version that does the same thing but could be considered as a better code
+write a Class from scratch从头开始
+
+## why to write a basic Log calss
+
+the Log class is going to be a way for us to manage our log messages. it's messages or information that we want our program to print to the console
+This is usually used for debugging purposes and it can really help us out in our game or application, if we wanna kinda see what's going on and just print the status of things into our console.
+Because the console in our application is really like an information dump信息转储, which we can use to just print out what's going on, it's something that is practically guaranteed to always work
+if we have a graphical display of a console in our game or something that might be a little bit different, and it might not work all the time, because if there is something with our graphics rendering system or something like that, we might not get those messages printing properly
+However, a console is something that's basically built into the operating system, so we can pretty much guarantee that it will always work
+
+关于为什么选择Log class，因为Log类对debugging和development非常重要，it is definitely worth spending time on that
+另外，Logging systems can do things like:
+1 print just the console
+2 print console in different colors
+3 actually output log messages to a file or a network
+you can literally make a Log class be ten lines of code or ten thousand lines of code.
+
+## Log的功能划分
+
+it's going to basically probide the ability to write text to the console
+and it's going to maintain some log level which is what level of log messages we actually want to send out to the console
+有三种等级
+error
+warning
+message or trace messages跟踪消息
+
+## 开始编写1
+
+a really good way of creating a new class or designing an API is by its usage
+
+in the main function, i'm going to instantiate it
+注意我们一般we're just going to use `const char pointer` as `strings` for now，后面会讲到更多的
+下面看一个简单的例子，这个例子中，0是Error，1是warning，2是information
+
+```
+#include <iostream>
+
+class Log
+{
+private:
+    int m_LogLevel    //m的意思是提醒我，这个变量 is a class member variable that is private, this is a convention公约, to organize your code and keep it clean
+
+public:
+    void SetLevel(int level)
+    {
+        m_LogLevel = level;        //assign our member variable with the parameter(local variables)
+    }
+    void Warn(const char* message)
+    {
+
+    }
+};
+
+int main()
+{
+    Log log;
+    log.SetLevel(2);    // 1
+    log.Warn("Hello!");
+    std::cin.get();
+}
+```
+
+1 if i call SetLevel with 2, it will assign the value 2 to our member variable `m_LogLevel`
+但是这样的问题是，没有人知道2是什么，一个人raise了这个代码，他不知道2是什么
+所以我们要预设一些public variables
+
+## 改进编写2
+```
+#include <iostream>
+
+class Log
+{
+public:		//public variables, and we can create a new section for public static variables
+	const int LogLevelError = 0;
+	const int LogLevelWarning = 1;
+	const int LogLevelInfo = 2;	//Trace/information messages
+private:
+	int m_LogLevel = LogLevelInfo;//默认将成员变量m_LogLevel设置为正常的信息输出等级everything should get printed
+public:		//public methods
+	void SetLevel(int level)
+	{
+		m_LogLevel = level;
+	}
+
+	void Error(const char* message)
+	{
+		if(m_LogLevel >= LogLevelError)
+			std::cout << "[ERROR]: " << message << std::endl;
+	}
+	void Warn(const char* message)
+	{
+		if(m_LogLevel >= LogLevelWarning)	//既然你call Wran 函数了，那么你的level一定要至少是1
+			std::cout << "[WARNING]: " << message << std::endl;
+	}
+	void Info(const char* message)
+	{
+		if(m_LogLevel >= LogLevelInfo)
+			std::cout << "[INFO]: " << message << std::endl;
+	}
+};
+
+int main() {
+	Log log;
+	log.SetLevel(log.LogLevelError); //because our level was set to warning, so only error will get printed
+	//log.SetLevel(log.LogLevelWarning); //because our level was set to warning, so the info will not get printed
+	//if we never set a log level, it should be using info as default
+	log.Error("Hello");
+	log.Warn("Hello!");
+	log.Info("Hello!");
+
+	std::cin.get();
+
+}
+```
