@@ -204,7 +204,7 @@ so, we can modify the function to actually take in a pointer
 and in the 调用语句, i'll pass the memory address of `a`
 `Increment(&a);`
 and then, we have to modify the body
-`*value++;`    we reference this value（改成解引用dereference的形式，the dereference operator, 即加asterisk*） so that we can actually `write to that memory` instead of modifying the pointer itself, or it's going to just increment that memory address, not the actual value
+`*value++;`    we reference this value（改成解引用dereference的形式，the dereference operator, 即加asterisk即*） so that we can actually `write to that memory` instead of modifying the pointer itself, or it's going to just increment that memory address, not the actual value
 but, because of the order of operations
 `(*value)++;` dereference the pointer first and then increment the value at pointer
 
@@ -233,6 +233,7 @@ int main()
 
 引用能做的事，指针都能做
 cleaner and simpler to read
+同理，`(int& value)`相当于在函数体第一行写了一句，`int& value = a;`
 
 ## 5. tips
 
@@ -587,50 +588,51 @@ int main()
 所以我们要预设一些public variables
 
 ## 改进编写2
+
 ```
 #include <iostream>
 
 class Log
 {
-public:		//public variables, and we can create a new section for public static variables
-	const int LogLevelError = 0;
-	const int LogLevelWarning = 1;
-	const int LogLevelInfo = 2;	//Trace/information messages
+public:        //public variables, and we can create a new section for public static variables
+    const int LogLevelError = 0;
+    const int LogLevelWarning = 1;
+    const int LogLevelInfo = 2;    //Trace/information messages
 private:
-	int m_LogLevel = LogLevelInfo;//默认将成员变量m_LogLevel设置为正常的信息输出等级everything should get printed
-public:		//public methods
-	void SetLevel(int level)
-	{
-		m_LogLevel = level;
-	}
+    int m_LogLevel = LogLevelInfo;//默认将成员变量m_LogLevel设置为正常的信息输出等级everything should get printed
+public:        //public methods
+    void SetLevel(int level)
+    {
+        m_LogLevel = level;
+    }
 
-	void Error(const char* message)
-	{
-		if(m_LogLevel >= LogLevelError)
-			std::cout << "[ERROR]: " << message << std::endl;
-	}
-	void Warn(const char* message)
-	{
-		if(m_LogLevel >= LogLevelWarning)	//既然你call Wran 函数了，那么你的level一定要至少是1
-			std::cout << "[WARNING]: " << message << std::endl;
-	}
-	void Info(const char* message)
-	{
-		if(m_LogLevel >= LogLevelInfo)
-			std::cout << "[INFO]: " << message << std::endl;
-	}
+    void Error(const char* message)
+    {
+        if(m_LogLevel >= LogLevelError)
+            std::cout << "[ERROR]: " << message << std::endl;
+    }
+    void Warn(const char* message)
+    {
+        if(m_LogLevel >= LogLevelWarning)    //既然你call Wran 函数了，那么你的level一定要至少是1
+            std::cout << "[WARNING]: " << message << std::endl;
+    }
+    void Info(const char* message)
+    {
+        if(m_LogLevel >= LogLevelInfo)
+            std::cout << "[INFO]: " << message << std::endl;
+    }
 };
 
 int main() {
-	Log log;
-	log.SetLevel(log.LogLevelError); //because our level was set to warning, so only error will get printed
-	//log.SetLevel(log.LogLevelWarning); //because our level was set to warning, so the info will not get printed
-	//if we never set a log level, it should be using info as default
-	log.Error("Hello");
-	log.Warn("Hello!");
-	log.Info("Hello!");
+    Log log;
+    log.SetLevel(log.LogLevelError); //because our level was set to warning, so only error will get printed
+    //log.SetLevel(log.LogLevelWarning); //because our level was set to warning, so the info will not get printed
+    //if we never set a log level, it should be using info as default
+    log.Error("Hello");
+    log.Warn("Hello!");
+    log.Info("Hello!");
 
-	std::cin.get();
+    std::cin.get();
 
 }
 ```
